@@ -1,1 +1,675 @@
-Placeholder
+<!DOCTYPE html>
+<html>
+
+<head>
+  
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-CN5DPV4JQN"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-CN5DPV4JQN');
+</script>
+  
+  <meta charset="utf-8">
+  <meta name="description" content="A Careful Examination of Large Behavior Models
+  for Multitask Dexterous Manipulation">
+  <meta name="keywords"
+    content="Large Behavior Models, Foundation Models, Robotics, Embodied AI, Embodied Intelligence, Toyota Research Institute, LBM, TRI, Evaluation, Multitask, Transfer Learning, Dexterous Manipulation, Diffusion Policy, Data, Multitask Dexterous Manipulation">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>A Careful Examination of Large Behavior Models for Multitask Dexterous Manipulation</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+
+  <!-- <link rel="icon" type="image/x-icon" href="./favicon.ico"> -->
+  <link rel="icon" href="./favicon.png" type="image/png" />
+
+  <link rel="stylesheet" href="./css/bulma.min.css">
+  <link rel="stylesheet" href="./css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./css/index.css">
+
+  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism.min.css"> -->
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./js/fontawesome.all.min.js"></script>
+  <script src="./js/bulma-carousel.min.js"></script>
+  <script src="./js/bulma-slider.min.js"></script>
+</head>
+
+<body>
+
+  <section class="teaser">
+
+    <div class="hero-header">
+      <div class="hero-header-background">
+        <img src="images/gradient.png" />
+      </div>
+
+      <div class="hero-header-inner">
+        <div class="hero-header-content">
+          <div class="hero-header-logo">
+            <a href="https://www.tri.global/" target="_blank">
+              <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 157 123">
+                <g clip-path="url(#a)" fill="#fff">
+                  <path
+                    d="M123.886 45.406s1.476-2.61 1.476-4.355c0-1.745-1.476-4.354-1.476-4.354L102.698 0s8.034 15 8.034 41.051c0 26.05-8.034 41.051-8.034 41.051l21.188-36.696Z" />
+                  <path
+                    d="M52.806 77.748s1.515 2.59 3.03 3.453c1.515.882 4.506.901 4.506.901h42.356S85.69 81.565 63.141 68.54C40.592 55.515 31.62 41.051 31.62 41.051l21.187 36.697ZM60.342 0s-2.991.02-4.506.902c-1.515.882-3.03 3.452-3.03 3.452L31.638 41.051S40.61 26.587 63.16 13.562C85.71.537 102.718 0 102.718 0H60.342ZM45.06 92.461H31.638v2.973h4.947v12.661h3.528v-12.66h4.947V92.46ZM54.148 91.981c-4.582 0-8.283 3.722-8.283 8.287 0 4.566 3.72 8.287 8.283 8.287 4.564 0 8.284-3.721 8.284-8.287 0-4.565-3.72-8.287-8.284-8.287Zm4.046 10.8a4.344 4.344 0 0 1-3.24 2.667 5.775 5.775 0 0 1-.825.076c-.268 0-.556-.019-.805-.076a4.304 4.304 0 0 1-3.24-2.667 6.813 6.813 0 0 1 0-5.026 4.343 4.343 0 0 1 3.24-2.666c.269-.058.537-.077.805-.077.269 0 .556.02.825.077a4.304 4.304 0 0 1 3.24 2.666 6.813 6.813 0 0 1 0 5.026ZM62.49 92.461h4.141l3.873 6.714 3.854-6.714H78.5l-6.25 9.86v5.774h-3.51v-5.774l-6.25-9.86ZM78.577 100.288c0-4.585 3.7-8.287 8.283-8.287 4.583 0 8.283 3.721 8.283 8.287 0 4.565-3.72 8.287-8.283 8.287-4.564 0-8.283-3.722-8.283-8.287Zm8.283 5.236c.268 0 .556-.019.825-.076a4.304 4.304 0 0 0 3.24-2.667c.307-.786.48-1.63.48-2.513a6.89 6.89 0 0 0-.48-2.513c-.537-1.361-1.764-2.397-3.24-2.647-.269-.038-.537-.077-.825-.077-.268 0-.556.02-.805.077-1.477.269-2.723 1.285-3.24 2.647a6.89 6.89 0 0 0-.48 2.513c0 .883.172 1.727.48 2.513a4.344 4.344 0 0 0 3.24 2.667c.249.038.537.076.805.076ZM120.166 104.642h-6.654l-1.284 3.434h-3.912l6.328-15.634h4.391l6.327 15.634h-3.911l-1.285-3.434Zm-1.016-2.724-2.301-6.177-2.301 6.177h4.602ZM109.352 92.461H95.91v2.973h4.967v12.661h3.508v-12.66h4.967V92.46ZM107.319 115.25h2.915v7.462h2.09l-.02-7.462h2.934v-1.765h-7.919v1.765ZM120.588 115.25h2.934v7.462h2.07v-7.462h2.915v-1.765h-7.919v1.765ZM139.896 115.25h2.915v7.462h2.071v-7.462h2.934v-1.765h-7.92v1.765ZM93.859 119.048l-3.95-5.563h-2.071v9.227h2.07v-5.563l3.95 5.563h2.072v-9.227h-2.071v5.563ZM85.652 113.485h-2.07v9.227h2.07v-9.227ZM118.958 113.485h-2.071v9.227h2.071v-9.227ZM151.535 120.967v-2.091h4.641v-1.746h-4.641v-1.88h5.369v-1.765h-7.459v9.227H157v-1.745h-5.465ZM136.177 118.876c0 1.592-.518 2.321-1.975 2.321-1.458 0-1.975-.729-1.975-2.321v-5.371h-2.071v6.138c0 2.053 1.783 3.357 4.046 3.357 2.262 0 4.045-1.304 4.045-3.357v-6.138h-2.07v5.371ZM101.874 117.149c-1.132-.192-1.63-.575-1.63-1.132 0-.709.633-.997 1.63-.997.997 0 1.629.23 1.629 1.189h2.205c0-2.091-1.687-2.992-3.834-2.992-2.148 0-3.855.901-3.855 2.992 0 1.688 1.803 2.302 3.855 2.628 1.629.269 1.917.729 1.917 1.17 0 1.075-.92 1.19-1.917 1.19s-1.918-.307-1.918-1.381h-2.205c0 2.34 1.975 3.165 4.123 3.165 2.147 0 4.122-.844 4.122-3.165 0-1.784-2.109-2.341-4.122-2.667ZM11.984 118.876h4.64v-1.746h-4.64v-1.88h5.388v-1.765H9.913v9.227h7.555v-1.745h-5.484v-2.091ZM31.063 118.876h4.64v-1.746h-4.64v-1.88h5.368v-1.765h-7.44v9.227h7.536v-1.745h-5.465v-2.091ZM75.47 113.485v3.645h-3.95v-3.645h-2.07v9.227h2.07v-3.836h3.95v3.836h2.071v-9.227h-2.07ZM7.823 116.228c0-1.707-.901-2.743-3.24-2.743H0v9.227h2.07v-3.74h1.611l2.263 3.74h2.493l-2.378-3.913c1.246-.384 1.764-1.285 1.764-2.571Zm-3.068.998H2.071v-1.976h2.684c.345 0 .978.23.978.998.02.748-.633.978-.978.978ZM56.871 116.228c0-1.707-.9-2.743-3.24-2.743h-4.583v9.227h2.07v-3.74h1.612l2.262 3.74h2.493l-2.378-3.913c1.246-.384 1.764-1.285 1.764-2.571Zm-3.068.998H51.1v-1.976h2.703c.346 0 .978.23.978.998 0 .767-.633.978-.978.978ZM62.72 115.058c.153-.019.325-.038.479-.038.153 0 .326.019.48.038a2.548 2.548 0 0 1 1.84 1.42H67.8a4.881 4.881 0 0 0-4.602-3.261 4.886 4.886 0 0 0-4.89 4.891A4.887 4.887 0 0 0 63.2 123a4.881 4.881 0 0 0 4.602-3.261h-2.263a2.545 2.545 0 0 1-1.84 1.419 3.87 3.87 0 0 1-.48.039c-.153 0-.326-.019-.48-.039a2.552 2.552 0 0 1-1.917-1.573 3.823 3.823 0 0 1-.287-1.477c0-.518.095-1.016.287-1.477a2.488 2.488 0 0 1 1.898-1.573ZM23.01 117.149c-1.132-.192-1.63-.575-1.63-1.132 0-.709.632-.997 1.63-.997.996 0 1.63.23 1.63 1.189h2.204c0-2.091-1.687-2.992-3.835-2.992-2.147 0-3.854.901-3.854 2.992 0 1.688 1.803 2.302 3.854 2.628 1.63.269 1.918.729 1.918 1.17 0 1.075-.92 1.19-1.918 1.19-.997 0-1.917-.307-1.917-1.381h-2.205c0 2.34 1.975 3.165 4.122 3.165 2.148 0 4.123-.844 4.123-3.165 0-1.784-2.11-2.341-4.123-2.667ZM43.948 113.485h-2.57l-3.739 9.227h2.301l.748-2.033h3.93l.768 2.033h2.3l-3.738-9.227Zm-2.646 5.583 1.361-3.645 1.361 3.645h-2.722Z" />
+                </g>
+                <defs>
+                  <clipPath id="a">
+                    <path fill="#fff" d="M0 0h157v123H0z" />
+                  </clipPath>
+                </defs>
+              </svg>
+            </a>
+          </div>
+
+          <h1 class="publication-title" style="max-width: 1020px; margin: 0 auto;">
+            A Careful Examination of Large Behavior Models for Multitask Dexterous Manipulation
+          </h1>
+
+          <div class="publication-links">
+
+            <span class="link-block">
+              <a href="files/TRI-LBM-1.pdf" class="paper external-link button is-normal is-rounded is-dark">
+                <span class="icon">
+                  <i class="fas fa-file-pdf"></i>
+                </span>
+                <span>Download Paper</span>
+              </a>
+            </span>
+
+            <span class="link-block">
+              <a href="https://arxiv.org/abs/2507.05331" class="external-link button is-normal is-rounded">
+                <span class="icon">
+                  <i class="fas fa-file-alt"></i>
+                </span>
+                <span>ArXiv</span>
+              </a>
+            </span>
+
+            <span class="link-block">
+              <a href="https://www.youtube.com/watch?v=TN1M6vg4CsQ" class="external-link button is-normal is-rounded">
+                <span class="icon">
+                  <i class="fas fa-chalkboard-teacher"></i>
+                </span>
+                <span>Seminar Talk</span>
+              </a>
+            </span>
+
+            <span class="link-block">
+              <a href="https://www.youtube.com/watch?v=DeLpnTgzJT4" class="external-link button is-normal is-rounded">
+                <span class="icon">
+                  <i class="fab fa-youtube"></i>
+                </span>
+                <span>Overview Video</span>
+              </a>
+            </span>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="hero-body" style="padding-top: 40px !important;">
+      <div class="container">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+
+            <div class="is-size-5 publication-authors">
+
+              <span class="author-block" style="margin-top: 20px;">
+                <div id="author-dropdown">
+                  <div class="author-trigger">
+                    <span style="cursor: pointer;" aria-expanded="true">
+                      <h2>Large Behavior Models Team, <span class="tri">Toyota Research Institute</span><br> <span
+                          class="is-size-6" id="toggle-text">(click to expand author list)</h2>
+                    </span>
+                    <span class="icon is-small">
+                      <img src="images/arrow.svg" />
+                    </span>
+              </span>
+            </div>
+            <div class="author-list">
+              <h5>Authors and contributions</h5>
+              <p>
+                <strong>First authors</strong><sup>1</sup>: Jose Barreiros, Andrew Beaulieu, Aditya Bhat, Rick Cory,
+                Eric Cousineau, Hongkai Dai, Ching-Hsin Fang, Kunimatsu Hashimoto, Muhammad Zubair Irshad, Masha Itkina,
+                Naveen Kuppuswamy, Kuan-Hui Lee, Katherine Liu, Dale McConachie, Ian McMahon, Haruki Nishimura, Calder
+                Phillips-Grafflin, Charles Richter, Paarth Shah, Krishnan Srinivasan, Blake Wulfe, Chen Xu, Mengchao
+                Zhang.
+              </p>
+              <p>
+                <strong>Second authors</strong><sup>2</sup>: Alex Alspach, Maya Angeles, Kushal Arora, Vitor Campagnolo
+                Guizilini, Alejandro Castro, Dian Chen, Ting-Sheng Chu, Sam Creasey, Sean Curtis, Richard Denitto, Emma
+                Dixon, Eric Dusel, Matthew Ferreira, Aimee Goncalves, Grant Gould, Damrong Guoy, Swati Gupta, Xuchen
+                Han, Kyle Hatch, Brendan Hathaway, Allison Henry, Hillel Hochsztein, Phoebe Horgan, Shun Iwase, Donovon
+                Jackson, Siddharth Karamcheti, Sedrick Keh, Joseph Masterjohn, Jean Mercat, Patrick Miller, Paul
+                Mitiguy, Tony Nguyen, Jeremy Nimmer, Yuki Noguchi, Reko Ong, Aykut Onol, Owen Pfannenstiehl, Richard
+                Poyner, Leticia Priebe Mendes Rocha, Gordon Richardson, Christopher Rodriguez, Derick Seale, Michael
+                Sherman, Mariah Smith-Jones, David Tago, Pavel Tokmakov, Matthew Tran, Basile Van Hoorick, Igor
+                Vasiljevic, Sergey Zakharov, Mark Zolotas.
+              </p>
+              <p>
+                <!-- <strong>Last authors</strong><sup>3</sup>: Rares Ambrus, Kerri Fetzer-Borelli, Ben Burchfiel, Hadas Kress-Gazit<sup>4</sup>, Siyuan Feng, Stacie Ford, Russ Tedrake. -->
+                <strong>Last authors</strong><sup>3</sup>: Rares Ambrus, Kerri Fetzer-Borelli, Ben Burchfiel, Hadas
+                Kress-Gazit, Siyuan Feng, Stacie Ford, Russ Tedrake.
+              </p>
+
+              <div class="footnotes" style="margin-top: 20px; font-size: 0.9em; color: #666;">
+                <p>
+                  All authors are sorted alphabetically within each group.<br>
+                  <sup>1</sup> Primary contributors who made substantial contributions to the work (policy architecture
+                  and training, evaluation, simulation).<br>
+                  <sup>2</sup> Assisted with the work (developing infrastructure, data collection, paper edits and
+                  feedback).<br>
+                  <sup>3</sup> Led the project and are responsible for strategic decisions (method, benchmark, paper
+                  writing and presentation).<br>
+                  <!-- <p><sup>4</sup> Cornell University, Ithaca, NY 14850, USA. Email: hadaskg@cornell.edu<br> -->
+                </p>
+              </div>
+            </div>
+          </div>
+          </span>
+
+        </div>
+
+      </div>
+    </div>
+    </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <div class="content has-text-justified">
+            <p>
+              General-purpose robots promise a future where household assistance is ubiquitous and aging in place is
+              supported by reliable, intelligent help. These robots will unlock human potential by enabling people to
+              shape and interact with the physical world in transformative new ways. At the core of this transformation
+              are Large Behavior Models (LBMs) — embodied AI systems that take in robot sensor data and output actions.
+              LBMs are pretrained on large, diverse manipulation datasets and offer the key to realizing robust,
+              general-purpose robotic intelligence.
+            </p>
+            <p>
+              Yet despite their growing popularity, we still know surprisingly little about the nuances of what today’s
+              LBMs actually offer. This uncertainty stems from the difficulty of conducting rigorous, large-scale
+              evaluations in real-world robotics. As a result, progress in algorithm and dataset design is often guided
+              by intuition rather than evidence, hampering progress. Our work aims to change that.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hero">
+    <div class="hero-body" style="padding-top: 16px !important; padding-bottom: 24px !important;">
+      <div class="container">
+
+        <div class="columns is-centered">
+
+          <div class="column is-half">
+            <div class="item item-steve" style="display: flex; flex-direction: column; align-items: center;">
+              <video poster="" id="bike-task" autoplay muted loop width="95%" controls="">
+                <source src="./videos/apple.mp4" type="video/mp4">
+              </video>
+
+              <!-- <p class="figure-caption">
+                LBM coring and cutting an apple.
+              </p> -->
+            </div>
+          </div>
+
+          <div class="column is-half">
+            <div class="item item-steve" style="display: flex; flex-direction: column; align-items: center;">
+              <video poster="" id="apple-task" autoplay muted loop width="95%" controls="">
+                <source src="./videos/bike.mp4" type="video/mp4">
+              </video>
+
+              <!-- <p class="figure-caption">
+                LBM installing a bike rotor.
+              </p> -->
+            </div>
+          </div>
+
+        </div>
+
+        <p class="figure-caption" style="width: 95%; margin-top: -20px;">
+          <!-- LBM performing the "Cut Apple Into Slices" and “Install Bike Rotor” tasks respectively. (1x speed) -->
+          Autonomous evaluation rollouts from two finetuned LBMs performing long-horizon behaviors: (left) coring and
+          cutting an apple, and (right) installing a bike rotor.
+          <br>
+          (Both videos are playing at 1x speed.)
+          <!-- Autonomous evaluation rollouts from two finetuned LBMs performing long-horizon behaviors. (Both videos are playing at 1x speed.) -->
+        </p>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">
+            Result Highlights</h2>
+          <div class="content has-text-justified">
+            <p>
+              We trained a series of diffusion-based LBMs on almost <strong>1,700 hours</strong> of robot data and
+              conducted <strong>1,800 real-world evaluation rollouts</strong> and over <strong>47,000 simulation
+                rollouts</strong> to rigorously study their capabilities.
+            </p>
+            <p>
+              We found that LBMs:
+            </p>
+            <ul>
+              <li>Deliver consistent performance improvements relative to from-scratch policies;</li>
+              <li>Enable new tasks to be learned with <strong>3-5× less data</strong> in challenging settings requiring
+                robustness to a variety of environmental factors;</li>
+              <li>Improve steadily as pretraining data increases.</li>
+            </ul>
+            <p>
+              Even with just a few hundred diverse hours of data — and only a few hundred demos per behavior —
+              performance jumped meaningfully. Pretraining provides consistent performance uplifts at earlier than
+              expected scales. There is not yet an internet worth of robot data, but benefits appear far before that
+              scale — a promising sign for enabling virtuous cycles of data acquisition and bootstrapped performance.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hero">
+    <div class="hero-body" style="padding-top: 4px !important; padding-bottom: 8px !important;">
+      <div class="container">
+        <div class="item item-steve" style="display: flex; flex-direction: column; align-items: center;">
+          <img src="./images/sim5.png" alt="Simulation finetuning scaling law plot"
+            style="max-width: 500px; width: 95%; height: auto;">
+          <p class="figure-caption" style="max-width: 500px; width: 95%; margin-top: 12px;">
+            As we add more data to our pretraining mixture by including additional tasks, aggregate LBM performance
+            improves smoothly.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <div class="content has-text-justified">
+            <p>
+              Our evaluation suite includes several novel and highly challenging long-horizon real-world tasks;
+              finetuned and evaluated in this setting, LBM pretraining improves performance despite these behaviors
+              being highly distinct from the pretraining tasks.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hero">
+    <div class="hero-body" style="padding-top: 4px !important;">
+      <div class="container">
+        <div class="item item-steve" style="display: flex; flex-direction: column; align-items: center;">
+          <img src="./images/hw_result2.png" alt="Achieved task progression"
+            style="max-width: 520px; width: 95%; height: auto;">
+          <p class="figure-caption" style="max-width: 520px; width: 95%;">
+            Achieved task progression on novel long-horizon real-world tasks.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hero">
+    <div class="hero-body" style="padding-top: 24px !important; padding-bottom: 24px !important;">
+      <div class="container">
+
+        <div class="item item-steve" style="display: flex; flex-direction: column; align-items: center;">
+          <video poster="" id="breakfast-task" autoplay muted loop width="97%" controls="">
+            <source src="./videos/bfast_cmp4c.mp4" type="video/mp4">
+          </video>
+
+          <!-- <p class="figure-caption"
+          style="width: 95%; height: auto;">
+            Side-by-side comparison of models performing the "Set Breakfast Table" task. (1x speed)
+          </p> -->
+        </div>
+
+        <p class="figure-caption" style="width: 95%; margin-top: 20px;">
+          <!-- LBM performing the "Cut Apple Into Slices" and “Install Bike Rotor” tasks respectively. (1x speed) -->
+          Side-by-side comparison of models setting up a breakfast table: (left) single-task baseline, and (right) LBM.
+          <br>
+          (Both videos are playing at 1x speed.)
+        </p>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">
+            LBMs — Architecture and Data</h2>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hero">
+    <div class="hero-body" style="padding-top: 4px !important;">
+      <div class="container">
+        <div class="item item-steve" style="display: flex; flex-direction: column; align-items: center;">
+          <img src="./images/arch4.png" alt="LBM architecture diagram"
+            style="max-width: 1100px; width: 95%; height: auto;">
+          <p class="figure-caption" style="max-width: 1100px; width: 95%; margin-top: 20px;">
+            The LBM architecture is instantiated as a diffusion transformer which predicts robot actions.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <div class="content has-text-justified">
+            <p>
+              Our LBMs are scaled multitask diffusion policies with multimodal ViT vision-language encoders and a
+              transformer denoising head conditioned on encoded observations via AdaLN. These models consume wrist and
+              scene cameras, robot proprioception, and language prompts and predict 16 timesteps (1.6 second) action
+              chunks.
+            </p>
+            <p>
+              We train our LBMs on a mixture of <strong>468 hours</strong> of internally collected <strong>bimanual
+                robot teleoperation data</strong>, <strong>45 hours</strong> of <strong>simulation-collected</strong>
+              teleoperation data, <strong>32 hours</strong> of <a href="https://umi-gripper.github.io/">Universal
+                Manipulation Interface</a> (<strong>UMI</strong>) data, and roughly <strong>1,150 hours</strong> of
+              <strong>internet data</strong> curated from the <a href="https://robotics-transformer-x.github.io/">Open
+                X-Embodiment</a> dataset. While the proportion of simulation data is small, its inclusion in our
+              pretraining mixture ensures that we can evaluate the same LBM checkpoint in both sim and real.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">
+            Evaluation —
+            <!-- <br> -->
+            Simulation, Real Robots, and
+            <br>
+            Careful Protocols
+          </h2>
+          <div class="content has-text-justified">
+            <p>
+              Our LBMs are evaluated on physical and Drake-simulated bimanual stations employing Franka Panda FR3 arms
+              and up to <strong>six cameras</strong> — up to <strong>two on each wrist</strong>, and <strong>two static
+                scene</strong> cameras.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hero">
+    <div class="hero-body" style="padding-top: 0px !important; padding-bottom: 12px !important;">
+      <div class="container">
+        <div class="item item-steve" style="display: flex; flex-direction: column; align-items: center;">
+          <img src="./images/experiment_crop.png" alt="Evaluation setup and tasks"
+            style="max-width: 880px; width: 95%; height: auto;">
+          <p class="figure-caption" style="max-width: 880px; width: 95%; margin-top: 12px;">
+            We evaluate our LBM models on a bimanual platform across a variety of tasks and environmental conditions in
+            both simulation and in the real world.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <div class="content has-text-justified">
+            <p>
+              We evaluate our models on both seen tasks (present in the pretraining data) and unseen tasks (which we
+              finetune our pretrained model on).
+              <!-- Our evaluation suite consists of 5 complex long-horizon real-world unseen tasks, 5 long-horizon simulated unseen tasks, 3 real-world seen tasks, and 16 simulated seen tasks. -->
+              Our evaluation suite consists of 16 simulated seen-during-pretraining tasks, 3 real-world
+              seen-during-pretraining tasks, <strong>5 previously unseen long-horizon simulated tasks</strong>, and
+              <strong>5 complex previously unseen long-horizon real-world tasks</strong>.
+              Each model was tested via 50 rollouts for each real-world task and 200 rollouts for each simulation task.
+              This enables a high level of statistical rigour in our analysis with the pretrained models evaluated on
+              <strong>4,200 rollouts across 29 tasks</strong>.
+            </p>
+            <p>
+              We carefully control initial conditions to be consistent in both the real-world and simulation, and
+              conduct blind A/B-style testing in the real world with statistical significance computed via a sequential
+              hypothesis testing framework.
+            </p>
+            <p>
+              Many of the effects we observe were only measurable with larger-than-standard sample sizes and careful
+              statistical testing that is non-standard for empirical robotics. It’s easy for noise due to experimental
+              variation to dwarf the effects being measured, and many robotics papers may be measuring statistical noise
+              due to insufficient statistical power. The plot below shows the size of Clopper-Pearson confidence
+              intervals at varying numbers of rollouts and true success rates. With 50 rollouts, for example 10 rollouts
+              each on 5 behaviors, the resulting CI width is generally 20% to 30% absolute success rate, making all but
+              the largest-sized effects impossible to reliably measure.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hero">
+    <div class="hero-body" style="padding-top: 16px !important;">
+      <div class="container">
+        <div class="item item-steve" style="display: flex; flex-direction: column; align-items: center;">
+          <img src="./images/clopper.png" alt="Evaluation setup and tasks"
+            style="max-width: 800px; width: 95%; height: auto;">
+          <p class="figure-caption" style="max-width: 800px; width: 95%; margin-top: 12px;">
+            We show confidence intervals as a function of number of evaluation rollouts.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">
+            Final Thoughts</h2>
+          <div class="content has-text-justified">
+            <p>
+              One of our main takeaways is that finetuned performance smoothly improves with increasing pretraining
+              data. At the data scales we examined, we saw no evidence of performance discontinuities or sharp
+              inflection points; AI scaling appears alive and well in robotics.
+            </p>
+            <p>
+              We did experience mixed results with non-finetuned pretrained LBMs. Encouragingly, we found that a single
+              network is able to learn many tasks simultaneously, but we don't observe consistent outperformance of
+              from-scratch single-task training without finetuning. We expect this is partially due to the language
+              steerability of our model. In internal testing, we've seen some promising early signs that larger VLA
+              prototypes overcome some of this difficulty, but more work is required to rigorously examine this effect
+              in higher-language-capacity models.
+            </p>
+            <p>
+              Our findings largely support the recent surge in popularity of LBM-style robot foundation models, adding
+              to evidence that large-scale pretraining on diverse robot data is a viable path towards more capable
+              robots, though with a few points of caution. Notably, subtle design choices like data normalization can
+              have large effects on performance, often dominating architectural or algorithmic changes. It's important
+              that these design choices are carefully isolated to avoid conflating the source of performance changes.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="margin-bottom: 4rem !important;">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">
+            More Resources</h2>
+
+          <!-- <div class="hero-header-inner">
+              <div class="hero-header-content"> -->
+          <div class="publication-links" style="margin-top: 2rem; margin-bottom: 3rem;">
+
+            <span class="link-block">
+              <a href="files/TRI-LBM-1.pdf" class="paper external-link button is-normal is-rounded">
+                <span class="icon">
+                  <i class="fas fa-file-pdf"></i>
+                </span>
+                <span>Download Paper</span>
+              </a>
+            </span>
+
+            <span class="link-block">
+              <a href="https://arxiv.org/abs/2507.05331" class="external-link button is-normal is-rounded">
+                <span class="icon">
+                  <i class="fas fa-file-alt"></i>
+                </span>
+                <span>ArXiv</span>
+              </a>
+            </span>
+
+            <span class="link-block">
+              <a href="https://www.youtube.com/watch?v=TN1M6vg4CsQ"
+                class="paper external-link button is-normal is-rounded">
+                <span class="icon">
+                  <i class="fas fa-chalkboard-teacher"></i>
+                </span>
+                <span>Seminar Talk</span>
+              </a>
+            </span>
+
+            <span class="link-block">
+              <a href="https://www.youtube.com/watch?v=DeLpnTgzJT4"
+                class="paper external-link button is-normal is-rounded">
+                <span class="icon">
+                  <i class="fab fa-youtube"></i>
+                </span>
+                <span>Overview Video</span>
+              </a>
+            </span>
+
+            <span class="link-block">
+              <a href="https://app.mediasilo.com/spotlight/21e8c21f-fd7a-47d9-91bc-67cb987303f4"
+                class="paper external-link button is-normal is-rounded is-dark"
+                target="_blank" rel="noopener noreferrer">
+                <span class="icon">
+                  <i class="fas fa-robot"></i>
+                </span>
+                <span>Browse All Hardware Rollout Videos</span>
+              </a>
+            </span>
+
+          </div>
+          <!-- </div>
+            </div> -->
+            
+            <h3 class="title is-5" style="text-align: left; margin-top: 4rem;">BibTeX Citation</h3>
+          
+            <div class="content has-text-justified">
+              <pre><code class="language-bibtex">@article{lbmtri2025,
+  title={A Careful Examination of Large Behavior Models for Multitask Dexterous Manipulation}, 
+  author={TRI LBM Team and Jose Barreiros and Andrew Beaulieu and Aditya Bhat and Rick Cory and Eric Cousineau and Hongkai Dai and Ching-Hsin Fang and Kunimatsu Hashimoto and Muhammad Zubair Irshad and Masha Itkina and Naveen Kuppuswamy and Kuan-Hui Lee and Katherine Liu and Dale McConachie and Ian McMahon and Haruki Nishimura and Calder Phillips-Grafflin and Charles Richter and Paarth Shah and Krishnan Srinivasan and Blake Wulfe and Chen Xu and Mengchao Zhang and Alex Alspach and Maya Angeles and Kushal Arora and Vitor Campagnolo Guizilini and Alejandro Castro and Dian Chen and Ting-Sheng Chu and Sam Creasey and Sean Curtis and Richard Denitto and Emma Dixon and Eric Dusel and Matthew Ferreira and Aimee Goncalves and Grant Gould and Damrong Guoy and Swati Gupta and Xuchen Han and Kyle Hatch and Brendan Hathaway and Allison Henry and Hillel Hochsztein and Phoebe Horgan and Shun Iwase and Donovon Jackson and Siddharth Karamcheti and Sedrick Keh and Joseph Masterjohn and Jean Mercat and Patrick Miller and Paul Mitiguy and Tony Nguyen and Jeremy Nimmer and Yuki Noguchi and Reko Ong and Aykut Onol and Owen Pfannenstiehl and Richard Poyner and Leticia Priebe Mendes Rocha and Gordon Richardson and Christopher Rodriguez and Derick Seale and Michael Sherman and Mariah Smith-Jones and David Tago and Pavel Tokmakov and Matthew Tran and Basile Van Hoorick and Igor Vasiljevic and Sergey Zakharov and Mark Zolotas and Rares Ambrus and Kerri Fetzer-Borelli and Benjamin Burchfiel and Hadas Kress-Gazit and Siyuan Feng and Stacie Ford and Russ Tedrake},
+  year={2025},
+  eprint={2507.05331},
+  archivePrefix={arXiv},
+  primaryClass={cs.RO},
+  url={https://arxiv.org/abs/2507.05331}, 
+}</code></pre>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="tri-footer">
+    <div class="tri-footer-background">
+      <img src="images/gradient.png" />
+    </div>
+    <div class="tri-footer-inner">
+      <div class="tri-footer-content">
+        <div class="tri-footer-logo">
+          <a href="https://www.tri.global/" target="_blank">
+            <img src="images/tri-logo-dark.png">
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const authorDropdown = document.getElementById('author-dropdown');
+      const dropdownTrigger = authorDropdown.querySelector('.author-trigger');
+      const authorList = authorDropdown.querySelector('.author-list');
+      const toggleText = document.getElementById('toggle-text');
+
+      // Toggle author dropdown
+      dropdownTrigger.addEventListener('click', (e) => {
+        authorDropdown.classList.toggle('is-active');
+
+        const isHidden = !authorList.classList.contains('show');
+
+        if (isHidden) {
+          authorList.classList.add('show');
+          authorList.classList.remove('animation-complete');
+
+          setTimeout(() => {
+            if (authorList.classList.contains('show')) {
+              authorList.classList.add('animation-complete');
+            }
+          }, 300); // 0.3s transition duration
+        } else {
+          authorList.classList.remove('show');
+          authorList.classList.remove('animation-complete');
+        }
+
+        toggleText.textContent = isHidden ? '(click to collapse author list)' : '(click to expand author list)';
+
+        dropdownTrigger.querySelector('span').setAttribute('aria-expanded', !isHidden);
+
+        e.stopPropagation();
+      });
+    });
+  </script>
+
+  <!-- <script src="https://cdn.jsdelivr.net/npm/prismjs/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-bibtex.min.js"></script>   -->
+
+</body>
+
+</html>
