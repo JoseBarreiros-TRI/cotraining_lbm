@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-CN5DPV4JQN"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-CN5DPV4JQN');
+</script>
+  
+  <meta charset="utf-8">
+  <meta name="description" content="Systematic Examination of Co-training Data Modalities and Strategies of Large Behavior Models for Robot Manipulation">
+  <meta name="keywords"
+    content="Large Behavior Models, Foundation Models, Robotics, Embodied AI, Embodied Intelligence, Toyota Research Institute, LBM, TRI, Evaluation, Multitask, Transfer Learning, Dexterous Manipulation, Diffusion Policy, Data, Multitask Dexterous Manipulation">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Systematic Examination of Co-training Data Modalities and Strategies of Large Behavior Models for Robot Manipulation</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+
+  <!-- <link rel="icon" type="image/x-icon" href="./favicon.ico"> -->
+  <link rel="icon" href="./favicon.png" type="image/png" />
+
+  <link rel="stylesheet" href="./css/bulma.min.css">
+  <link rel="stylesheet" href="./css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./css/index.css">
+
+  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism.min.css"> -->
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./js/fontawesome.all.min.js"></script>
+  <script src="./js/bulma-carousel.min.js"></script>
+  <script src="./js/bulma-slider.min.js"></script>
+</head>
+
+<body>
+
+  <section class="teaser">
+
+    <div class="hero-header">
+      <div class="hero-header-background">
+        <img src="images/gradient.png" />
+      </div>
+
+      <div class="hero-header-inner">
+        <div class="hero-header-content">
+          <div class="hero-header-logo">
+            <a href="https://www.tri.global/" target="_blank">
+              <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 157 123">
+                <g clip-path="url(#a)" fill="#fff">
+                  <path
+                    d="M123.886 45.406s1.476-2.61 1.476-4.355c0-1.745-1.476-4.354-1.476-4.354L102.698 0s8.034 15 8.034 41.051c0 26.05-8.034 41.051-8.034 41.051l21.188-36.696Z" />
+                  <path
+                    d="M52.806 77.748s1.515 2.59 3.03 3.453c1.515.882 4.506.901 4.506.901h42.356S85.69 81.565 63.141 68.54C40.592 55.515 31.62 41.051 31.62 41.051l21.187 36.697ZM60.342 0s-2.991.02-4.506.902c-1.515.882-3.03 3.452-3.03 3.452L31.638 41.051S40.61 26.587 63.16 13.562C85.71.537 102.718 0 102.718 0H60.342ZM45.06 92.461H31.638v2.973h4.947v12.661h3.528v-12.66h4.947V92.46ZM54.148 91.981c-4.582 0-8.283 3.722-8.283 8.287 0 4.566 3.72 8.287 8.283 8.287 4.564 0 8.284-3.721 8.284-8.287 0-4.565-3.72-8.287-8.284-8.287Zm4.046 10.8a4.344 4.344 0 0 1-3.24 2.667 5.775 5.775 0 0 1-.825.076c-.268 0-.556-.019-.805-.076a4.304 4.304 0 0 1-3.24-2.667 6.813 6.813 0 0 1 0-5.026 4.343 4.343 0 0 1 3.24-2.666c.269-.058.537-.077.805-.077.269 0 .556.02.825.077a4.304 4.304 0 0 1 3.24 2.666 6.813 6.813 0 0 1 0 5.026ZM62.49 92.461h4.141l3.873 6.714 3.854-6.714H78.5l-6.25 9.86v5.774h-3.51v-5.774l-6.25-9.86ZM78.577 100.288c0-4.585 3.7-8.287 8.283-8.287 4.583 0 8.283 3.721 8.283 8.287 0 4.565-3.72 8.287-8.283 8.287-4.564 0-8.283-3.722-8.283-8.287Zm8.283 5.236c.268 0 .556-.019.825-.076a4.304 4.304 0 0 0 3.24-2.667c.307-.786.48-1.63.48-2.513a6.89 6.89 0 0 0-.48-2.513c-.537-1.361-1.764-2.397-3.24-2.647-.269-.038-.537-.077-.825-.077-.268 0-.556.02-.805.077-1.477.269-2.723 1.285-3.24 2.647a6.89 6.89 0 0 0-.48 2.513c0 .883.172 1.727.48 2.513a4.344 4.344 0 0 0 3.24 2.667c.249.038.537.076.805.076ZM120.166 104.642h-6.654l-1.284 3.434h-3.912l6.328-15.634h4.391l6.327 15.634h-3.911l-1.285-3.434Zm-1.016-2.724-2.301-6.177-2.301 6.177h4.602ZM109.352 92.461H95.91v2.973h4.967v12.661h3.508v-12.66h4.967V92.46ZM107.319 115.25h2.915v7.462h2.09l-.02-7.462h2.934v-1.765h-7.919v1.765ZM120.588 115.25h2.934v7.462h2.07v-7.462h2.915v-1.765h-7.919v1.765ZM139.896 115.25h2.915v7.462h2.071v-7.462h2.934v-1.765h-7.92v1.765ZM93.859 119.048l-3.95-5.563h-2.071v9.227h2.07v-5.563l3.95 5.563h2.072v-9.227h-2.071v5.563ZM85.652 113.485h-2.07v9.227h2.07v-9.227ZM118.958 113.485h-2.071v9.227h2.071v-9.227ZM151.535 120.967v-2.091h4.641v-1.746h-4.641v-1.88h5.369v-1.765h-7.459v9.227H157v-1.745h-5.465ZM136.177 118.876c0 1.592-.518 2.321-1.975 2.321-1.458 0-1.975-.729-1.975-2.321v-5.371h-2.071v6.138c0 2.053 1.783 3.357 4.046 3.357 2.262 0 4.045-1.304 4.045-3.357v-6.138h-2.07v5.371ZM101.874 117.149c-1.132-.192-1.63-.575-1.63-1.132 0-.709.633-.997 1.63-.997.997 0 1.629.23 1.629 1.189h2.205c0-2.091-1.687-2.992-3.834-2.992-2.148 0-3.855.901-3.855 2.992 0 1.688 1.803 2.302 3.855 2.628 1.629.269 1.917.729 1.917 1.17 0 1.075-.92 1.19-1.917 1.19s-1.918-.307-1.918-1.381h-2.205c0 2.34 1.975 3.165 4.123 3.165 2.147 0 4.122-.844 4.122-3.165 0-1.784-2.109-2.341-4.122-2.667ZM11.984 118.876h4.64v-1.746h-4.64v-1.88h5.388v-1.765H9.913v9.227h7.555v-1.745h-5.484v-2.091ZM31.063 118.876h4.64v-1.746h-4.64v-1.88h5.368v-1.765h-7.44v9.227h7.536v-1.745h-5.465v-2.091ZM75.47 113.485v3.645h-3.95v-3.645h-2.07v9.227h2.07v-3.836h3.95v3.836h2.071v-9.227h-2.07ZM7.823 116.228c0-1.707-.901-2.743-3.24-2.743H0v9.227h2.07v-3.74h1.611l2.263 3.74h2.493l-2.378-3.913c1.246-.384 1.764-1.285 1.764-2.571Zm-3.068.998H2.071v-1.976h2.684c.345 0 .978.23.978.998.02.748-.633.978-.978.978ZM56.871 116.228c0-1.707-.9-2.743-3.24-2.743h-4.583v9.227h2.07v-3.74h1.612l2.262 3.74h2.493l-2.378-3.913c1.246-.384 1.764-1.285 1.764-2.571Zm-3.068.998H51.1v-1.976h2.703c.346 0 .978.23.978.998 0 .767-.633.978-.978.978ZM62.72 115.058c.153-.019.325-.038.479-.038.153 0 .326.019.48.038a2.548 2.548 0 0 1 1.84 1.42H67.8a4.881 4.881 0 0 0-4.602-3.261 4.886 4.886 0 0 0-4.89 4.891A4.887 4.887 0 0 0 63.2 123a4.881 4.881 0 0 0 4.602-3.261h-2.263a2.545 2.545 0 0 1-1.84 1.419 3.87 3.87 0 0 1-.48.039c-.153 0-.326-.019-.48-.039a2.552 2.552 0 0 1-1.917-1.573 3.823 3.823 0 0 1-.287-1.477c0-.518.095-1.016.287-1.477a2.488 2.488 0 0 1 1.898-1.573ZM23.01 117.149c-1.132-.192-1.63-.575-1.63-1.132 0-.709.632-.997 1.63-.997.996 0 1.63.23 1.63 1.189h2.204c0-2.091-1.687-2.992-3.835-2.992-2.147 0-3.854.901-3.854 2.992 0 1.688 1.803 2.302 3.854 2.628 1.63.269 1.918.729 1.918 1.17 0 1.075-.92 1.19-1.918 1.19-.997 0-1.917-.307-1.917-1.381h-2.205c0 2.34 1.975 3.165 4.122 3.165 2.148 0 4.123-.844 4.123-3.165 0-1.784-2.11-2.341-4.123-2.667ZM43.948 113.485h-2.57l-3.739 9.227h2.301l.748-2.033h3.93l.768 2.033h2.3l-3.738-9.227Zm-2.646 5.583 1.361-3.645 1.361 3.645h-2.722Z" />
+                </g>
+                <defs>
+                  <clipPath id="a">
+                    <path fill="#fff" d="M0 0h157v123H0z" />
+                  </clipPath>
+                </defs>
+              </svg>
+            </a>
+          </div>
+
+          <h1 class="publication-title" style="max-width: 1020px; margin: 0 auto;">
+            Systematic Examination of Co-training Data Modalities and Strategies of Large Behavior Models for Robot Manipulation
+          </h1>
+
+          <div class="publication-links">
+
+            <span class="link-block">
+              <a href="files/TRI-LBM-1.pdf" class="paper external-link button is-normal is-rounded is-dark">
+                <span class="icon">
+                  <i class="fas fa-file-pdf"></i>
+                </span>
+                <span>Download Paper</span>
+              </a>
+            </span>
+
+            <span class="link-block">
+              <a href="https://arxiv.org/abs/2507.05331" class="external-link button is-normal is-rounded">
+                <span class="icon">
+                  <i class="fas fa-file-alt"></i>
+                </span>
+                <span>ArXiv</span>
+              </a>
+            </span>
+
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="hero-body" style="padding-top: 40px !important;">
+      <div class="container">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+
+            <div class="is-size-5 publication-authors">
+
+              <span class="author-block" style="margin-top: 20px;">
+                <div class="author-list" style="display: block; margin-left: auto; margin-right: auto; margin-top: 1rem; margin-bottom: 1rem; padding-left: 2rem; padding-right: 2rem; padding-top: 2rem; padding-bottom: 2rem; background-color: #F9F9F9; border-radius: 10px; line-height: 1.7; width: 100%; max-width: 800px; text-align: justify; font-size: 0.9rem; color: #4a4a4a; opacity: 1;">
+                  <h5 style="text-transform: uppercase; color: black; margin: 0 0 0.5rem; font-weight: bold;">Authors</h5>
+                  <p style="margin-bottom: 0.75rem; color: #797979;">
+                    Fanqi Lin, Jose Barreiros, Kushal Arora, Sedrick Keh, Jean Mercat, Haruki Nishimura, Paarth Shah, Muhammad Zubair Irshad, Owen Pfannenstiehl, Mark Zolotas, Andrew Beaulieu, Max Bajracharya
+                  </p>
+                </div>
+              </span>
+
+        </div>
+
+      </div>
+    </div>
+    </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <div class="content has-text-justified">
+            <p>
+              Large behavior models (LBMs) have demonstrated dexterous manipulation capabilities by extending imitation learning to large-scale training on extensive multi-task robot data, yet their generalization capabilities remain limited by the insufficient robot data coverage. To expand such coverage without collecting a vast additional amount of robot data which is often expensive, recent works have increasingly relied on co-training—jointly learning target robot data along with heterogeneous data modalities. However, understanding how different co-training data modalities and strategies affect policy performance remains insufficient. We present a large-scale empirical study investigating five major co-training data modalities—standard vision-language data, rich language annotations for robot trajectories, cross-embodiment robot data, human videos, and discrete robot action tokens—across single- and multi-phase training strategies. Our study adopts a vision-language-action (VLA) architecture as our instantiation of a LBM, leveraging 4,000 hours of data featuring robots and humans performing manipulation tasks, and 50M vision-language samples. We evaluate 89 VLA policies across 58,000 simulation rollouts and 4,000 real-world trials, and find that co-training with various forms of vision-language data and cross-embodiment robot data substantially improves generalization to distribution shifts, unseen tasks, and language following. In contrast, co-training with multiple variants of discrete action tokens yields no statistically significant benefits. Combining effective data modalities offers cumulative policy performance gains and enables rapid adaptation to unseen long-horizon dexterous tasks. Furthermore, we find that conditioning action generation on chain-of-thought traces learned from co-training data does not enhance policy performance in our simulation benchmark. Together, these findings establish a systematic understanding of co-training, offering practical guidance towards building scalable, generalist robot policies.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hero">
+    <div class="hero-body" style="padding-top: 16px !important; padding-bottom: 24px !important;">
+      <div class="container">
+
+        <div class="columns is-centered">
+
+          <div class="column is-one-third">
+            <div class="item item-steve" style="display: flex; flex-direction: column; align-items: center;">
+              <video poster="" id="pack-items-task" autoplay muted loop width="130%" controls="">
+                <source src="./videos/abstract/pack_items.mp4" type="video/mp4">
+              </video>
+            </div>
+          </div>
+
+          <div class="column is-one-third">
+            <div class="item item-steve" style="display: flex; flex-direction: column; align-items: center;">
+              <video poster="" id="pour-ingredients-task" autoplay muted loop width="130%" controls="">
+                <source src="./videos/abstract/pour_ingredients.mp4" type="video/mp4">
+              </video>
+            </div>
+          </div>
+
+          <div class="column is-one-third">
+            <div class="item item-steve" style="display: flex; flex-direction: column; align-items: center;">
+              <video poster="" id="store-dishes-task" autoplay muted loop width="130%" controls="">
+                <source src="./videos/abstract/store_clean_dishes.mp4" type="video/mp4">
+              </video>
+            </div>
+          </div>
+
+        </div>
+
+        <p class="figure-caption" style="width: 95%; margin-top: -20px;">
+          <!-- LBM performing the "Cut Apple Into Slices" and “Install Bike Rotor” tasks respectively. (1x speed) -->
+          Autonomous evaluation rollouts from three finetuned co-trained LBMs performing long-horizon and dexterous tasks: (left) pack items into a string bag, (middle) pour ingredients into the soup, and (right) store clean dishes.
+          <br>
+          (Videos are playing at 1x speed.)
+          <!-- Autonomous evaluation rollouts from two finetuned LBMs performing long-horizon behaviors. (Both videos are playing at 1x speed.) -->
+        </p>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">
+            Overview</h2>
+          <div class="content has-text-justified">
+            <p>
+              Our robot policy uses a pretrained vision-language model (VLM) backbone and is trained on target robot data together with multiple co-training modalities, including standard vision-language data, rich language annotations for robot data, cross-embodiment robot data, human videos, and discrete robot action tokens. Policies are extensively evaluated in simulation on seen and unseen tasks under both nominal and distribution shift conditions, as well as in real-world experiments on seen tasks, language following, and long-horizon dexterous manipulation.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hero">
+    <div class="hero-body" style="padding-top: 4px !important; padding-bottom: 8px !important;">
+      <div class="container">
+        <div class="item item-steve" style="display: flex; flex-direction: column; align-items: center;">
+          <img src="./images/overview.png" alt="Overview"
+            style="max-width: 60%; width: 60%; height: auto;">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">
+            Impact of different co-training data modalities and strategies</h2>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hero">
+    <div class="hero-body" style="padding-top: 4px !important; padding-bottom: 8px !important;">
+      <div class="container">
+        <div class="item item-steve" style="display: flex; flex-direction: column; align-items: center;">
+          <img src="./images/useful_cotraining_modalities.png" alt="Useful co-training data modalities"
+            style="max-width: 60%; width: 60%; height: auto;">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <div class="content has-text-justified">
+            <p>
+              (1) Co-training with diverse vision-language data and cross-embodiment robot data substantially enhances the model's generalization to distribution shifts, unseen tasks, and language-following capabilities. Notably, owing to their information richness, co-training with standard vision-language data and language annotations for human videos benefits both 1st-phase and 2nd-phase co-training, whereas language annotations for robot trajectories and cross-embodiment data are primarily effective during 1st-phase in two-phase co-training.
+            </p>
+            <p>
+              (2) Across all the effective co-training data modalities, standard vision-language data, vlm-based language annotations for robot data, and language annotations for human videos are the most beneficial. Notably, these three modalities are all in the form of diverse vision-language data, suggesting that strengthening vision-language understanding of the VLM backbone translates into better robot policies.
+            </p>
+            <p>
+              (3) Discrete action tokens (including latent actions extracted from videos, FAST tokens, and action tokens learned from VQ-VAE) co-training yield no statistically significant performance improvements in our experiments. Specifically, co-training with FAST tokens decreases generalization, while latent actions from videos only provide benefits in the low target robot data regime, with benefits diminishing as the proportion of robot data increases.
+            </p>
+            <p>
+              (4) Across all co-training modalities examined, we observe no statistically significant impact on in-distribution performance.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">
+            Combining effective co-training modalities</h2>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hero">
+    <div class="hero-body" style="padding-top: 4px !important; padding-bottom: 8px !important;">
+      <div class="container">
+        <div class="item item-steve" style="display: flex; flex-direction: column; align-items: center;">
+          <img src="./images/combined_modalities.png" alt="Combining effective co-training modalities"
+            style="max-width: 60%; width: 60%; height: auto;">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <div class="content has-text-justified">
+            <p>
+              Combining the effective co-training modalities yields cumulative performance improvements. Benefiting from our curated co-training data and carefully designed training strategies, our final model achieves strong performance on our experiments, demonstrating substantial improvements over the model trained solely on target robot data, namely the no-co-training baseline.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h3 class="title is-4">
+            Language Following</h3>
+          <div class="content has-text-justified">
+            <p>
+              Our final model is more effective at following language than the no co-training baseline.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column is-four-fifths">
+          <div style="display: flex; align-items: center; margin: 20px 0 15px 0; flex-wrap: wrap; gap: 10px;">
+            <select id="language-setting-selection" style="margin-right: 1.5%; padding: 8px 16px; border: 1px solid #ccc; border-radius: 15px; background-color: #fff; font-size: 0.95em; color: #333; cursor: pointer;" onchange="updateInstructionOptions()">
+              <option value="seen_and_instruction_generalization">Seen Objects / Instruction Generalization</option>
+              <option value="unseen_objects">Unseen Objects</option>
+            </select>
+            <select id="language-layout-selection" style="margin-right: 1.5%; padding: 8px 16px; border: 1px solid #ccc; border-radius: 15px; background-color: #fff; font-size: 0.95em; color: #333; cursor: pointer;" onchange="SelectLanguageVideo()">
+              <option value="1">Layout 1</option>
+              <option value="2">Layout 2</option>
+              <option value="3">Layout 3</option>
+              <option value="4">Layout 4</option>
+            </select>
+            <select id="language-instruction-selection" style="margin-right: 1.5%; padding: 8px 16px; border: 1px solid #ccc; border-radius: 15px; background-color: #fff; font-size: 0.95em; color: #333; cursor: pointer;" onchange="SelectLanguageVideo()">
+              <option value="1">Instruction 1</option>
+            </select>
+            <button id="shuffle-language-video" style="padding: 8px 16px; border: 1px solid #ccc; border-radius: 15px; background-color: #fff; font-size: 0.95em; color: #333; cursor: pointer; transition: border-color 0.2s ease; display: flex; align-items: center; gap: 5px;" onclick="ShuffleLanguageVideo()">
+              <span>Shuffle</span>
+            </button>
+          </div>
+          <div id="language-instruction-display" style="margin: 20px 0; text-align: center; font-size: 1.1em; font-weight: 500;">
+            <span style="color: #333;">Instruction: </span><span id="language-instruction-text" style="color: #287775;">-</span>
+          </div>
+          <div style="display: flex; flex-direction: row; gap: 20px; align-items: center; justify-content: center; margin-top: 20px;">
+            <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+              <p style="font-weight: bold; margin-bottom: 10px;">Baseline</p>
+              <video id="language-baseline-video" width="100%" controls autoplay loop muted style="box-shadow: 0px 0px 15px 2px rgba(0, 0, 0, .1); border-radius: .75rem;">
+                <source src="" type="video/mp4">
+              </video>
+            </div>
+            <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+              <p style="font-weight: bold; margin-bottom: 10px;">Final Model</p>
+              <video id="language-final-video" width="100%" controls autoplay loop muted style="box-shadow: 0px 0px 15px 2px rgba(0, 0, 0, .1); border-radius: .75rem;">
+                <source src="" type="video/mp4">
+              </video>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h3 class="title is-4">
+            Simulation Unseen Tasks</h3>
+          <div class="content has-text-justified">
+            <p>
+              Our final model outperforms the baseline for unseen tasks
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column is-four-fifths">
+          <div style="display: flex; align-items: center; margin: 20px 0 15px 0; flex-wrap: wrap; gap: 10px;">
+            <select id="simulation-task-selection" style="margin-right: 1.5%; padding: 8px 16px; border: 1px solid #ccc; border-radius: 15px; background-color: #fff; font-size: 0.95em; color: #333; cursor: pointer;" onchange="updateSimulationEpisodes()">
+              <option value="BimanualPlaceAvocadoFromBowlIntoBin">Place Avocado From Bowl Into Bin</option>
+              <option value="PlaceFruitIntoContainer">Place Fruit Into Container</option>
+              <option value="PlaceOrangeIntoContainer">Place Orange Into Container</option>
+              <option value="PlaceRedFoodIntoContainer">Place Red Food Into Container</option>
+              <option value="PutAppleAndPearOnPlate">Put Apple And Pear On Plate</option>
+              <option value="PutKiwiOnPlateNoAvocado">Put Kiwi On Plate</option>
+              <option value="PutMugInCenterOfTable">Put Mug In Center Of Table</option>
+              <option value="PutSpatulaInUtensilCrock">Put Spatula In Utensil Crock</option>
+            </select>
+            <select id="simulation-layout-selection" style="margin-right: 1.5%; padding: 8px 16px; border: 1px solid #ccc; border-radius: 15px; background-color: #fff; font-size: 0.95em; color: #333; cursor: pointer;" onchange="SelectSimulationVideo()">
+              <option value="0">Episode 1</option>
+            </select>
+            <button id="shuffle-simulation-video" style="padding: 8px 16px; border: 1px solid #ccc; border-radius: 15px; background-color: #fff; font-size: 0.95em; color: #333; cursor: pointer; transition: border-color 0.2s ease; display: flex; align-items: center; gap: 5px;" onclick="ShuffleSimulationVideo()">
+              <span>Shuffle</span>
+            </button>
+          </div>
+          <div id="simulation-instruction-display" style="margin: 20px 0; text-align: center; font-size: 1.1em; font-weight: 500;">
+            <span style="color: #333;">Instruction: </span><span id="simulation-instruction-text" style="color: #287775;">-</span>
+          </div>
+          <div style="display: flex; flex-direction: row; gap: 20px; align-items: center; justify-content: center; margin-top: 20px;">
+            <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+              <p style="font-weight: bold; margin-bottom: 10px;">Baseline</p>
+              <video id="simulation-baseline-video" width="100%" controls autoplay loop muted style="box-shadow: 0px 0px 15px 2px rgba(0, 0, 0, .1); border-radius: .75rem;">
+                <source id="simulation-baseline-source" src="" type="video/mp4">
+              </video>
+            </div>
+            <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+              <p style="font-weight: bold; margin-bottom: 10px;">Final Model</p>
+              <video id="simulation-final-video" width="100%" controls autoplay loop muted style="box-shadow: 0px 0px 15px 2px rgba(0, 0, 0, .1); border-radius: .75rem;">
+                <source id="simulation-final-source" src="" type="video/mp4">
+              </video>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">
+            Co-training enhances the quality of learned representations</h2>
+          <div class="content has-text-justified">
+            <p>
+              Co-training enhances the quality of learned representations, thereby enabling rapid adaptation to unseen long-horizon, dexterous tasks.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column is-four-fifths">
+          <div style="display: flex; align-items: center; margin: 20px 0 15px 0; flex-wrap: wrap; gap: 10px;">
+            <select id="representation-task-selection" style="margin-right: 1.5%; padding: 8px 16px; border: 1px solid #ccc; border-radius: 15px; background-color: #fff; font-size: 0.95em; color: #333; cursor: pointer;" onchange="SelectRepresentationVideo()">
+              <option value="clean" selected>Clean</option>
+              <option value="pack">Pack</option>
+              <option value="pour">Pour</option>
+            </select>
+          </div>
+          <div style="display: flex; flex-direction: row; gap: 20px; align-items: center; justify-content: center; margin-top: 20px;">
+            <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+              <p style="font-weight: bold; margin-bottom: 10px;">Baseline</p>
+              <video id="representation-baseline-video" width="100%" controls autoplay loop muted preload="metadata" style="box-shadow: 0px 0px 15px 2px rgba(0, 0, 0, .1); border-radius: .75rem;">
+              </video>
+            </div>
+            <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+              <p style="font-weight: bold; margin-bottom: 10px;">Final Model</p>
+              <video id="representation-final-video" width="100%" controls autoplay loop muted preload="metadata" style="box-shadow: 0px 0px 15px 2px rgba(0, 0, 0, .1); border-radius: .75rem;">
+              </video>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">
+            Open Ended Language Following</h2>
+          <div class="content has-text-justified">
+            <p>
+              Co-training helps open ended language following.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column is-four-fifths">
+          <div style="display: flex; align-items: center; margin: 20px 0 15px 0; flex-wrap: wrap; gap: 10px;">
+            <select id="open-language-task-selection" style="margin-right: 1.5%; padding: 8px 16px; border: 1px solid #ccc; border-radius: 15px; background-color: #fff; font-size: 0.95em; color: #333; cursor: pointer;" onchange="SelectOpenLanguageVideo()">
+              <option value="clean_up">Clean Up</option>
+              <option value="sandwich">Sandwich</option>
+            </select>
+            <select id="open-language-model-selection" style="margin-right: 1.5%; padding: 8px 16px; border: 1px solid #ccc; border-radius: 15px; background-color: #fff; font-size: 0.95em; color: #333; cursor: pointer;" onchange="SelectOpenLanguageVideo()">
+              <option value="baseline">Baseline</option>
+              <option value="final" selected>Final</option>
+            </select>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 20px;">
+            <video id="open-language-video" width="100%" controls autoplay loop preload="metadata" style="box-shadow: 0px 0px 15px 2px rgba(0, 0, 0, .1); border-radius: .75rem;">
+              <track id="open-language-track" kind="captions" srclang="en" label="English" default>
+            </video>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="margin-bottom: 4rem !important;">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h3 class="title is-5" style="text-align: left; margin-top: 4rem;">BibTeX Citation</h3>
+          
+          <div class="content has-text-justified">
+            <pre><code class="language-bibtex">@article{lbmtri2025,
+  title={Systematic Examination of Co-training Data Modalities and Strategies of Large Behavior Models for Robot Manipulation}, 
+  author={Fanqi Lin and Jose Barreiros and Kushal Arora and Sedrick Keh and Jean Mercat and Haruki Nishimura and Paarth Shah and Muhammad Zubair Irshad and Owen Pfannenstiehl and Mark Zolotas and Andrew Beaulieu and Max Bajracharya},
+  year={2025},
+  eprint={2507.05331},
+  archivePrefix={arXiv},
+  primaryClass={cs.RO},
+  url={https://arxiv.org/abs/2507.05331}, 
+}</code></pre>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="tri-footer">
+    <div class="tri-footer-background">
+      <img src="images/gradient.png" />
+    </div>
+    <div class="tri-footer-inner">
+      <div class="tri-footer-content">
+        <div class="tri-footer-logo">
+          <a href="https://www.tri.global/" target="_blank">
+            <img src="images/tri-logo-dark.png">
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- <script src="https://cdn.jsdelivr.net/npm/prismjs/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-bibtex.min.js"></script>   -->
+
+  <script>
+    // Language Following video selection
+    function updateInstructionOptions() {
+      var setting = document.getElementById("language-setting-selection").value;
+      var instructionSelect = document.getElementById("language-instruction-selection");
+      
+      // Clear existing options
+      instructionSelect.innerHTML = '';
+      
+      if (setting === "seen_and_instruction_generalization") {
+        // 6 options: 3 instructions × 2 variants each
+        var options = [
+          {value: "1_1", text: "Instruction 1 variant 1"},
+          {value: "1_2", text: "Instruction 1 variant 2"},
+          {value: "2_1", text: "Instruction 2 variant 1"},
+          {value: "2_2", text: "Instruction 2 variant 2"},
+          {value: "3_1", text: "Instruction 3 variant 1"},
+          {value: "3_2", text: "Instruction 3 variant 2"}
+        ];
+        options.forEach(function(opt) {
+          var option = document.createElement("option");
+          option.value = opt.value;
+          option.textContent = opt.text;
+          instructionSelect.appendChild(option);
+        });
+      } else if (setting === "unseen_objects") {
+        // 3 instructions for Unseen Objects
+        for (var i = 1; i <= 3; i++) {
+          var option = document.createElement("option");
+          option.value = i;
+          option.textContent = "Instruction " + i;
+          instructionSelect.appendChild(option);
+        }
+      }
+      
+      SelectLanguageVideo();
+    }
+
+    function loadInstructionText(setting, layout, instruction) {
+      var yamlPath = "./videos/language_following/" + setting + "/layout" + layout + "/instructions.yaml";
+      var instructionTextElement = document.getElementById("language-instruction-text");
+      
+      // Fetch and parse the YAML file
+      fetch(yamlPath)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Failed to load instructions');
+          }
+          return response.text();
+        })
+        .then(yamlText => {
+          // Parse simple YAML format (key: value)
+          var lines = yamlText.split('\n');
+          var instructions = {};
+          
+          lines.forEach(function(line) {
+            line = line.trim();
+            if (line && line.includes(':')) {
+              var parts = line.split(':');
+              if (parts.length >= 2) {
+                var key = parts[0].trim();
+                var value = parts.slice(1).join(':').trim();
+                instructions[key] = value;
+              }
+            }
+          });
+          
+          // Display the instruction
+          if (instructions[instruction]) {
+            instructionTextElement.textContent = instructions[instruction];
+          } else {
+            instructionTextElement.textContent = "-";
+          }
+        })
+        .catch(error => {
+          console.error('Error loading instructions:', error);
+          instructionTextElement.textContent = "-";
+        });
+    }
+
+    function SelectLanguageVideo() {
+      var setting = document.getElementById("language-setting-selection").value;
+      var layout = document.getElementById("language-layout-selection").value;
+      var instruction = document.getElementById("language-instruction-selection").value;
+      
+      var finalVideo = document.getElementById("language-final-video");
+      var baselineVideo = document.getElementById("language-baseline-video");
+      
+      // Load and display instruction text
+      loadInstructionText(setting, layout, instruction);
+      
+      // Construct video paths based on setting type
+      if (setting === "seen_and_instruction_generalization") {
+        // Format: baseline_{instruction}_{variant}_cropped.mp4 and ours_{instruction}_{variant}_cropped.mp4
+        baselineVideo.src = "./videos/language_following/" + setting + "/layout" + layout + "/baseline_" + instruction + "_cropped.mp4";
+        finalVideo.src = "./videos/language_following/" + setting + "/layout" + layout + "/ours_" + instruction + "_cropped.mp4";
+      } else if (setting === "unseen_objects") {
+        // Format: baseline_{instruction}_cropped.mp4 and ours_{instruction}_cropped.mp4
+        baselineVideo.src = "./videos/language_following/" + setting + "/layout" + layout + "/baseline_" + instruction + "_cropped.mp4";
+        finalVideo.src = "./videos/language_following/" + setting + "/layout" + layout + "/ours_" + instruction + "_cropped.mp4";
+      }
+      
+      finalVideo.load();
+      baselineVideo.load();
+    }
+
+    function ShuffleLanguageVideo() {
+      var settingSelect = document.getElementById("language-setting-selection");
+      var layoutSelect = document.getElementById("language-layout-selection");
+      var instructionSelect = document.getElementById("language-instruction-selection");
+      
+      // Randomize setting
+      var settingOptions = settingSelect.options;
+      settingSelect.selectedIndex = Math.floor(Math.random() * settingOptions.length);
+      
+      // Update instruction options based on new setting (this will also trigger SelectLanguageVideo)
+      updateInstructionOptions();
+      
+      // Randomize layout
+      var layoutOptions = layoutSelect.options;
+      layoutSelect.selectedIndex = Math.floor(Math.random() * layoutOptions.length);
+      
+      // Randomize instruction
+      var instructionOptions = instructionSelect.options;
+      instructionSelect.selectedIndex = Math.floor(Math.random() * instructionOptions.length);
+      
+      SelectLanguageVideo();
+    }
+
+    // Simulation Unseen Tasks video selection
+    // Task to episodes mapping
+    var simulationTaskEpisodes = {
+      "BimanualPlaceAvocadoFromBowlIntoBin": [0, 8, 24, 30, 40],
+      "PlaceFruitIntoContainer": [0, 1, 2, 5, 8],
+      "PlaceOrangeIntoContainer": [4, 5, 10, 28, 37],
+      "PlaceRedFoodIntoContainer": [0, 5, 14, 31, 43],
+      "PutAppleAndPearOnPlate": [0, 1, 2, 10, 15],
+      "PutKiwiOnPlateNoAvocado": [6, 8, 9, 19, 28],
+      "PutMugInCenterOfTable": [0, 1, 6, 8, 17],
+      "PutSpatulaInUtensilCrock": [0, 2, 11, 17, 49]
+    };
+
+    var simulationVideoMapping = null;
+
+    // Load video mapping on page load
+    function loadSimulationVideoMapping() {
+      // Add cache-busting parameter to ensure fresh JSON is loaded
+      fetch("./videos/simulation_unseen_tasks/video_mapping.json?v=" + Date.now())
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Failed to load video mapping');
+          }
+          return response.json();
+        })
+        .then(data => {
+          simulationVideoMapping = data;
+          // Verify we have cam2 in the mapping
+          var sampleTask = Object.keys(data)[0];
+          var sampleBaseline = data[sampleTask].baseline['0'];
+          var sampleFinal = data[sampleTask].final['0'];
+          console.log('Loaded video mapping:');
+          console.log('  Sample baseline:', sampleBaseline, 'has _cam2:', sampleBaseline.includes('_cam2'));
+          console.log('  Sample final:', sampleFinal, 'has _cam2:', sampleFinal.includes('_cam2'));
+          // Initialize episodes for default task
+          updateSimulationEpisodes();
+        })
+        .catch(error => {
+          console.error('Error loading video mapping:', error);
+        });
+    }
+
+    function updateSimulationEpisodes() {
+      var task = document.getElementById("simulation-task-selection").value;
+      var layoutSelect = document.getElementById("simulation-layout-selection");
+      var episodes = simulationTaskEpisodes[task] || [];
+      
+      // Clear existing options
+      layoutSelect.innerHTML = '';
+      
+      // Add episode options
+      for (var i = 0; i < episodes.length; i++) {
+        var option = document.createElement("option");
+        option.value = episodes[i];
+        option.textContent = "Episode " + (i + 1) + " (ep_" + episodes[i] + ")";
+        layoutSelect.appendChild(option);
+      }
+      
+      SelectSimulationVideo();
+    }
+
+    function loadSimulationInstructionText(task, episode) {
+      // Try both possible paths for instructions.yaml
+      var yamlPath1 = "./videos/simulation_unseen_tasks/" + task + "/nan/instructions.yaml";
+      var yamlPath2 = "./videos/simulation_unseen_tasks/" + task + "/instructions.yaml";
+      var instructionTextElement = document.getElementById("simulation-instruction-text");
+      
+      // Try first path, then fallback to second
+      var yamlPath = yamlPath1;
+      fetch(yamlPath)
+        .then(response => {
+          if (!response.ok) {
+            // Try second path
+            return fetch(yamlPath2);
+          }
+          return response;
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Failed to load instructions');
+          }
+          return response.text();
+        })
+        .then(yamlText => {
+          // Parse YAML format - instructions are the same for all episodes, only depend on task
+          var lines = yamlText.split('\n');
+          var instruction = '';
+          
+          // Look for the first non-empty line as the instruction
+          for (var i = 0; i < lines.length; i++) {
+            var line = lines[i].trim();
+            if (line) {
+              // If it's in key:value format, extract the value
+              if (line.includes(':')) {
+                var parts = line.split(':');
+                if (parts.length >= 2) {
+                  instruction = parts.slice(1).join(':').trim();
+                } else {
+                  instruction = line;
+                }
+              } else {
+                // Plain text format
+                instruction = line;
+              }
+              break; // Use the first non-empty line
+            }
+          }
+          
+          // Display the instruction
+          if (instruction) {
+            instructionTextElement.textContent = instruction;
+          } else {
+            instructionTextElement.textContent = '-';
+          }
+        })
+        .catch(error => {
+          console.error('Error loading simulation instructions:', error);
+          instructionTextElement.textContent = '-';
+        });
+    }
+
+    function SelectSimulationVideo() {
+      if (!simulationVideoMapping) {
+        console.log('Video mapping not loaded yet');
+        return;
+      }
+
+      var task = document.getElementById("simulation-task-selection").value;
+      var episode = document.getElementById("simulation-layout-selection").value;
+      
+      // Load and display instruction text
+      loadSimulationInstructionText(task, episode);
+      
+      // Convert episode to string to match JSON keys
+      var episodeStr = String(episode);
+      
+      var finalVideo = document.getElementById("simulation-final-video");
+      var baselineVideo = document.getElementById("simulation-baseline-video");
+      
+      // Get exact filenames from mapping
+      var basePath = "./videos/simulation_unseen_tasks/" + task + "/nan/";
+      var taskMapping = simulationVideoMapping[task];
+      
+      if (taskMapping && taskMapping.baseline && taskMapping.baseline[episodeStr]) {
+        // Get filename from mapping
+        var baselineFilenameFromMapping = taskMapping.baseline[episodeStr];
+        console.log('Baseline filename from mapping:', baselineFilenameFromMapping);
+        console.log('  Contains _cam2:', baselineFilenameFromMapping.includes('_cam2'));
+        console.log('  Contains _cam0:', baselineFilenameFromMapping.includes('_cam0'));
+        
+        // Encode + character in filename for URL
+        var baselineFilename = baselineFilenameFromMapping.replace(/\+/g, '%2B');
+        var baselinePath = basePath + "baseline/" + baselineFilename;
+        var baselineSource = document.getElementById("simulation-baseline-source");
+        if (baselineSource) {
+          baselineSource.src = baselinePath;
+        }
+        baselineVideo.src = baselinePath;
+        baselineVideo.load();
+        
+        // Verify what was actually set
+        setTimeout(function() {
+          console.log('Baseline video actual src after load:', baselineVideo.src);
+          console.log('Baseline source element src:', baselineSource ? baselineSource.src : 'N/A');
+        }, 100);
+        
+        // Add error handler
+        baselineVideo.addEventListener('error', function(e) {
+          console.error('Error loading baseline video:', baselinePath, 'Actual src:', baselineVideo.src, e);
+        });
+        
+        baselineVideo.play().catch(function(error) {
+          console.log('Autoplay prevented, user interaction required:', error);
+        });
+        console.log('Loading baseline video:', baselinePath);
+      } else {
+        console.error('Baseline video not found for task:', task, 'episode:', episodeStr, 'Available episodes:', Object.keys(taskMapping?.baseline || {}));
+      }
+      
+      if (taskMapping && taskMapping.final && taskMapping.final[episodeStr]) {
+        // Get filename from mapping
+        var finalFilenameFromMapping = taskMapping.final[episodeStr];
+        console.log('Final filename from mapping:', finalFilenameFromMapping);
+        console.log('  Contains _cam2:', finalFilenameFromMapping.includes('_cam2'));
+        console.log('  Contains _cam0:', finalFilenameFromMapping.includes('_cam0'));
+        
+        // Encode + character in filename for URL
+        var finalFilename = finalFilenameFromMapping.replace(/\+/g, '%2B');
+        var finalPath = basePath + "final/" + finalFilename;
+        var finalSource = document.getElementById("simulation-final-source");
+        if (finalSource) {
+          finalSource.src = finalPath;
+        }
+        finalVideo.src = finalPath;
+        finalVideo.load();
+        
+        // Verify what was actually set
+        setTimeout(function() {
+          console.log('Final video actual src after load:', finalVideo.src);
+          console.log('Final source element src:', finalSource ? finalSource.src : 'N/A');
+        }, 100);
+        
+        // Add error handler
+        finalVideo.addEventListener('error', function(e) {
+          console.error('Error loading final video:', finalPath, 'Actual src:', finalVideo.src, e);
+        });
+        
+        finalVideo.play().catch(function(error) {
+          console.log('Autoplay prevented, user interaction required:', error);
+        });
+        console.log('Loading final video:', finalPath);
+      } else {
+        console.error('Final video not found for task:', task, 'episode:', episodeStr, 'Available episodes:', Object.keys(taskMapping?.final || {}));
+      }
+    }
+
+    function ShuffleSimulationVideo() {
+      var taskSelect = document.getElementById("simulation-task-selection");
+      var layoutSelect = document.getElementById("simulation-layout-selection");
+      
+      // Randomize task
+      var taskOptions = taskSelect.options;
+      taskSelect.selectedIndex = Math.floor(Math.random() * taskOptions.length);
+      
+      // Update episodes for new task
+      updateSimulationEpisodes();
+      
+      // Randomize layout/episode
+      var layoutOptions = layoutSelect.options;
+      layoutSelect.selectedIndex = Math.floor(Math.random() * layoutOptions.length);
+      
+      SelectSimulationVideo();
+    }
+
+    // Representation quality video selection
+    // Mapping of task names to their baseline video filenames
+    var dexterousBaselineFiles = {
+      "clean": "baseline_1_failed.mp4",
+      "pack": "baseline_1_failed.mp4",
+      "pour": "baseline_1_better.mp4"
+    };
+    
+    function SelectRepresentationVideo() {
+      var task = document.getElementById("representation-task-selection").value;
+      
+      if (!task) {
+        // Clear videos if no task selected
+        var baselineVideo = document.getElementById("representation-baseline-video");
+        var finalVideo = document.getElementById("representation-final-video");
+        baselineVideo.src = "";
+        finalVideo.src = "";
+        return;
+      }
+      
+      var baselineVideo = document.getElementById("representation-baseline-video");
+      var finalVideo = document.getElementById("representation-final-video");
+      
+      // Construct video paths - videos are in videos/dexterous/task_name/
+      var basePath = "./videos/dexterous/" + task + "/";
+      var baselineFilename = dexterousBaselineFiles[task] || "baseline_1_failed.mp4";
+      var baselinePath = basePath + baselineFilename;
+      var finalPath = basePath + "ours_1.mp4";
+      
+      console.log('Loading representation videos:');
+      console.log('  Baseline:', baselinePath);
+      console.log('  Final:', finalPath);
+      
+      // Update video src directly
+      baselineVideo.src = baselinePath;
+      finalVideo.src = finalPath;
+      
+      baselineVideo.load();
+      finalVideo.load();
+      
+      // Add error handlers
+      baselineVideo.addEventListener('error', function(e) {
+        console.error('Error loading baseline video:', baselinePath, e);
+      }, { once: true });
+      
+      finalVideo.addEventListener('error', function(e) {
+        console.error('Error loading final video:', finalPath, e);
+      }, { once: true });
+      
+      baselineVideo.play().catch(function(error) {
+        console.log('Autoplay prevented for baseline video, user interaction required:', error);
+      });
+      
+      finalVideo.play().catch(function(error) {
+        console.log('Autoplay prevented for final video, user interaction required:', error);
+      });
+    }
+
+    // Initialize instruction options on page load
+    // Open Ended Language Following video selection
+    function SelectOpenLanguageVideo() {
+      var task = document.getElementById("open-language-task-selection").value;
+      var model = document.getElementById("open-language-model-selection").value;
+      
+      var video = document.getElementById("open-language-video");
+      var track = document.getElementById("open-language-track");
+      
+      // Construct video and caption paths
+      var videoPath = "./videos/open_language_following/" + task + "/" + model + "_trimmed.mp4";
+      var captionPath = "./videos/open_language_following/" + task + "/" + model + "_trimmed.vtt";
+      
+      console.log('Loading open language video:', videoPath);
+      console.log('Loading captions:', captionPath);
+      
+      // Update video source
+      video.src = videoPath;
+      
+      // Update caption track source
+      track.src = captionPath;
+      
+      // Reload video to apply new sources
+      video.load();
+      
+      // Enable captions by default
+      video.addEventListener('loadedmetadata', function() {
+        var textTracks = video.textTracks;
+        for (var i = 0; i < textTracks.length; i++) {
+          textTracks[i].mode = 'showing';
+        }
+      }, { once: true });
+      
+      // Add error handlers
+      video.addEventListener('error', function(e) {
+        console.error('Error loading open language video:', videoPath, e);
+      }, { once: true });
+      
+      track.addEventListener('error', function(e) {
+        console.error('Error loading captions:', captionPath, e);
+      }, { once: true });
+      
+      video.play().catch(function(error) {
+        console.log('Autoplay prevented for open language video, user interaction required:', error);
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      updateInstructionOptions();
+      loadSimulationVideoMapping();
+      // Load default representation video
+      SelectRepresentationVideo();
+      // Load default open language video
+      SelectOpenLanguageVideo();
+    });
+  </script>
+
+</body>
+
+</html>
